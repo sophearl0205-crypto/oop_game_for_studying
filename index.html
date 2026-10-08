@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Java OOP Quest</title>
+<style>
+:root{--bg:#0e1020;--card:#181b33;--ink:#e8eaff;--mut:#9aa0cc;--acc:#7c5cff;--ok:#2ecc8f;--bad:#ff5c7a;--gold:#ffc83d;--ln:#2a2e57;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f1f2ff;--card:#fff;--ink:#1b1e3d;--mut:#5b6190;--ln:#d9dcf5}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,Segoe UI,sans-serif;line-height:1.5}
+.wrap{max-width:1000px;margin:auto;padding:14px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+h1{margin:0;font-size:1.5rem}h1 span{color:var(--acc)}
+.hud{flex:1;min-width:220px;max-width:380px}.bar{height:12px;background:var(--ln);border-radius:9px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--gold));transition:width .5s}
+.hud small{color:var(--mut)}
+nav{display:flex;gap:8px;margin:14px 0}
+nav button,.btn{background:var(--card);color:var(--ink);border:1px solid var(--ln);padding:9px 14px;border-radius:10px;font-weight:600;cursor:pointer;font-size:.95rem}
+nav button.on,.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn:hover,nav button:hover{filter:brightness(1.15)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:14px}
+.card.m{cursor:pointer}.card.m:hover{border-color:var(--acc)}
+.tag{font-size:.75rem;color:var(--gold);font-weight:700}.done{color:var(--ok)}
+.split{display:grid;grid-template-columns:1fr 1.2fr;gap:12px}
+@media(max-width:760px){.split{grid-template-columns:1fr}}
+textarea{width:100%;height:340px;background:#0a0c1a;color:#d6e2ff;border:1px solid var(--ln);border-radius:10px;padding:10px;font:13px/1.5 ui-monospace,Consolas,monospace;resize:vertical;tab-size:4}
+.chk{list-style:none;padding:0;margin:8px 0}.chk li{padding:4px 0}.chk .y{color:var(--ok)}.chk .n{color:var(--mut)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.opt{display:block;width:100%;text-align:left;margin:7px 0}
+.opt.right{border-color:var(--ok);background:rgba(46,204,143,.18)}.opt.wrong{border-color:var(--bad);background:rgba(255,92,122,.18)}
+pre{background:#0a0c1a;color:#d6e2ff;padding:10px;border-radius:10px;overflow-x:auto;font-size:13px}
+.msg{margin-top:10px;padding:10px;border-radius:10px;background:var(--card);border:1px solid var(--ln)}
+.badge{text-align:center;opacity:.35}.badge.got{opacity:1}.badge b{font-size:2rem;display:block}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--gold);color:#222;padding:10px 18px;border-radius:30px;font-weight:700;display:none;z-index:9}
+</style></head><body><div class="wrap">
+<header><h1>☕ Java <span>OOP Quest</span></h1>
+<div class="hud"><div id="lvl" style="font-weight:700"></div><div class="bar"><i id="xpbar"></i></div><small id="xptxt"></small></div></header>
+<nav id="nav"><button data-t="m" class="on">🗺️ Missions</button><button data-t="q">⚡ Quiz Arena</button><button data-t="b">🏅 Badges</button></nav>
+<main id="main"></main></div><div id="toast"></div>
+<script>
+const M=[
+{t:"Birth of an Object",tag:"Classes & Objects",xp:50,
+story:"Create your first creature! A class is the blueprint; an object is the real thing built from it.",
+tasks:["Create a class named Dog","Give it fields: String name and int age","Add a method void bark() that prints something","In main, create an object with new Dog() and call bark()"],
+checks:[["class Dog",/class\s+Dog\b/],["String name field",/String\s+name\s*;/],["int age field",/int\s+age\s*;/],["bark() method",/void\s+bark\s*\(\s*\)/],["prints output",/System\.out\.print/],["creates object with new Dog()",/new\s+Dog\s*\(/],["calls bark()",/\.bark\s*\(\s*\)\s*;/]],
+start:"public class Main {\n    // write class Dog here (or above Main)\n\n    public static void main(String[] args) {\n        \n    }\n}\n\nclass Dog {\n    \n}",
+sol:"class Dog {\n    String name;\n    int age;\n\n    void bark() {\n        System.out.println(name + \" says Woof!\");\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Dog d = new Dog();\n        d.name = \"Rex\";\n        d.bark();\n    }\n}"},
+{t:"The Vault",tag:"Encapsulation",xp:70,
+story:"Protect the bank! Nobody should touch the balance directly. Hide data, expose safe methods.",
+tasks:["Create class BankAccount with a private double balance","Add public double getBalance()","Add public void deposit(double amount) that only adds when amount > 0","Add public void withdraw(double amount) that blocks overdrafts (if statement)"],
+checks:[["class BankAccount",/class\s+BankAccount\b/],["private double balance",/private\s+double\s+balance/],["getBalance() getter",/public\s+double\s+getBalance\s*\(\s*\)/],["deposit(double)",/void\s+deposit\s*\(\s*double\s+\w+\s*\)/],["deposit validates amount > 0",/if\s*\(\s*\w+\s*>\s*0\s*\)/],["withdraw(double)",/void\s+withdraw\s*\(\s*double\s+\w+\s*\)/],["checks balance before withdraw",/if\s*\([^)]*balance[^)]*\)/]],
+start:"class BankAccount {\n    \n}",
+sol:"class BankAccount {\n    private double balance;\n\n    public double getBalance() { return balance; }\n\n    public void deposit(double amount) {\n        if (amount > 0) balance += amount;\n    }\n\n    public void withdraw(double amount) {\n        if (amount > 0 && amount <= balance) balance -= amount;\n    }\n}"},
+{t:"Hero Builder",tag:"Constructors & this",xp:70,
+story:"Heroes need to be born ready. Use constructors to set up objects the moment they are created.",
+tasks:["Create class Hero with private String name and private int health","Write a constructor Hero(String name, int health) using this.","Add a no-argument constructor that calls this(\"Unknown\", 100)","Add getName() and getHealth()"],
+checks:[["class Hero",/class\s+Hero\b/],["private fields",/private\s+String\s+name[\s\S]*private\s+int\s+health|private\s+int\s+health[\s\S]*private\s+String\s+name/],["constructor Hero(String, int)",/Hero\s*\(\s*String\s+\w+\s*,\s*int\s+\w+\s*\)/],["uses this.name =",/this\.name\s*=/],["no-arg constructor",/Hero\s*\(\s*\)/],["constructor chaining this(...)",/this\s*\(\s*"[^"]*"\s*,\s*\d+\s*\)/],["getName()",/getName\s*\(\s*\)/],["getHealth()",/getHealth\s*\(\s*\)/]],
+start:"class Hero {\n    \n}",
+sol:"class Hero {\n    private String name;\n    private int health;\n\n    public Hero(String name, int health) {\n        this.name = name;\n        this.health = health;\n    }\n\n    public Hero() {\n        this(\"Unknown\", 100);\n    }\n\n    public String getName() { return name; }\n    public int getHealth() { return health; }\n}"},
+{t:"Family Tree",tag:"Inheritance",xp:90,
+story:"Reuse power! A child class inherits from its parent, then adds or changes behavior.",
+tasks:["Create class Animal with protected String name, a constructor Animal(String name) and void speak()","Create class Cat that extends Animal","Cat's constructor must call super(name)","Override speak() in Cat using @Override"],
+checks:[["class Animal",/class\s+Animal\b/],["protected String name",/protected\s+String\s+name/],["Animal constructor",/Animal\s*\(\s*String\s+\w+\s*\)/],["Cat extends Animal",/class\s+Cat\s+extends\s+Animal/],["super(name) call",/super\s*\(\s*\w+\s*\)/],["@Override annotation",/@Override/],["speak() defined in both",/void\s+speak\s*\(\s*\)[\s\S]*void\s+speak\s*\(\s*\)/]],
+start:"class Animal {\n    \n}\n\nclass Cat {\n    \n}",
+sol:"class Animal {\n    protected String name;\n\n    Animal(String name) { this.name = name; }\n\n    void speak() {\n        System.out.println(name + \" makes a sound\");\n    }\n}\n\nclass Cat extends Animal {\n    Cat(String name) { super(name); }\n\n    @Override\n    void speak() {\n        System.out.println(name + \" says Meow\");\n    }\n}"},
+{t:"Shape Shifter",tag:"Abstraction & Polymorphism",xp:110,
+story:"One reference, many forms. An abstract class defines WHAT must be done, subclasses decide HOW.",
+tasks:["Create abstract class Shape with abstract double area()","Create Circle (double radius) extends Shape; area = Math.PI * r * r","Create Rectangle (width, height) extends Shape","In main, store both in a Shape[] array and loop to print each area()"],
+checks:[["abstract class Shape",/abstract\s+class\s+Shape/],["abstract double area()",/abstract\s+double\s+area\s*\(\s*\)\s*;/],["Circle extends Shape",/class\s+Circle\s+extends\s+Shape/],["Rectangle extends Shape",/class\s+Rectangle\s+extends\s+Shape/],["Math.PI used",/Math\.PI/],["@Override area()",/@Override[\s\S]*double\s+area/],["Shape[] array (polymorphism)",/Shape\s*\[\s*\]/],["loop over shapes",/for\s*\(/]],
+start:"abstract class Shape {\n    \n}\n\npublic class Main {\n    public static void main(String[] args) {\n        \n    }\n}",
+sol:"abstract class Shape {\n    abstract double area();\n}\n\nclass Circle extends Shape {\n    double r;\n    Circle(double r) { this.r = r; }\n    @Override\n    double area() { return Math.PI * r * r; }\n}\n\nclass Rectangle extends Shape {\n    double w, h;\n    Rectangle(double w, double h) { this.w = w; this.h = h; }\n    @Override\n    double area() { return w * h; }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Shape[] shapes = { new Circle(2), new Rectangle(3, 4) };\n        for (Shape s : shapes) {\n            System.out.println(s.area());\n        }\n    }\n}"},
+{t:"The Contract",tag:"Interfaces",xp:110,
+story:"An interface is a promise. Any class that signs it must provide the methods.",
+tasks:["Create interface Playable with void play() and void stop()","Create class Guitar implements Playable","Create class Piano implements Playable","In main, use Playable p = new Guitar(); and call p.play()"],
+checks:[["interface Playable",/interface\s+Playable/],["play() declared",/void\s+play\s*\(\s*\)\s*;/],["stop() declared",/void\s+stop\s*\(\s*\)\s*;/],["Guitar implements Playable",/class\s+Guitar\s+implements\s+Playable/],["Piano implements Playable",/class\s+Piano\s+implements\s+Playable/],["public play() implemented",/public\s+void\s+play\s*\(\s*\)\s*\{/],["Playable p = new ...",/Playable\s+\w+\s*=\s*new\s+\w+/]],
+start:"interface Playable {\n    \n}\n\npublic class Main {\n    public static void main(String[] args) {\n        \n    }\n}",
+sol:"interface Playable {\n    void play();\n    void stop();\n}\n\nclass Guitar implements Playable {\n    public void play() { System.out.println(\"Strum!\"); }\n    public void stop() { System.out.println(\"Guitar muted\"); }\n}\n\nclass Piano implements Playable {\n    public void play() { System.out.println(\"Plink!\"); }\n    public void stop() { System.out.println(\"Piano silent\"); }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Playable p = new Guitar();\n        p.play();\n        p.stop();\n    }\n}"}
+];
+const Q=[
+["Which keyword creates an object?",["new","create","make","object"],0,"new allocates memory and calls the constructor."],
+["Which OOP principle hides internal data using private fields?",["Inheritance","Encapsulation","Polymorphism","Abstraction"],1,"Encapsulation = private data + public methods."],
+["Which keyword makes a class inherit from another?",["implements","inherits","extends","super"],2,"class Child extends Parent."],
+["A class can extend how many classes in Java?",["One","Two","Unlimited","Zero"],0,"Java has single inheritance for classes (but many interfaces)."],
+["What does super(...) do in a constructor?",["Calls the parent constructor","Creates a new object","Calls a static method","Ends the program"],0,"It must be the first statement in the constructor."],
+["Method overloading means...",["Same name, different parameters","Same name and parameters in a subclass","Two classes with same name","Hiding a field"],0,"Overloading is resolved at compile time."],
+["Method overriding means...",["Same name, different parameters","Subclass redefines a parent method","Deleting a method","Making a method static"],1,"Overriding is resolved at runtime (dynamic dispatch)."],
+["Which can NOT be instantiated with new?",["Concrete class","Abstract class","Final class","Public class"],1,"Abstract classes are incomplete; instantiate a subclass."],
+["Interface methods (without default/static) are implicitly...",["private","public abstract","protected","final"],1,"They are public and abstract."],
+["What is the default value of an uninitialized int field?",["null","1","0","undefined"],2,"Numeric fields default to 0, object references to null."],
+["Which access modifier allows access in same package AND subclasses?",["private","protected","public only","none"],1,"protected = package + subclasses."],
+["What does the 'final' keyword on a class do?",["Prevents it being extended","Makes it abstract","Makes it static","Hides it"],0,"final classes (like String) cannot be subclassed."],
+["Animal a = new Dog(); a.speak(); runs which version of speak()?",["Animal's","Dog's","Neither","Compile error"],1,"Polymorphism: the actual object's method runs."],
+["What does 'this' refer to?",["The parent class","The current object","The class itself","A static field"],1,"this = the current instance."],
+["A static method belongs to...",["Each object","The class","The JVM only","An interface only"],1,"Call it with ClassName.method()."],
+["Which relationship is 'has-a'?",["Inheritance","Composition","Overriding","Overloading"],1,"e.g. a Car has an Engine field."],
+["Can an interface extend another interface?",["Yes","No","Only abstract ones","Only in Java 8"],0,"interface B extends A is valid."],
+["What happens if a subclass doesn't implement an abstract method?",["Runs fine","Subclass must be abstract or compile error","Method is auto-generated","Runtime warning"],1,"Concrete subclasses must implement all abstract methods."]
+];
+const BADGES=[["🐣","First Blood","Finish a mission",s=>Object.keys(s.done).length>=1],["🔥","On Fire","Get a 5-answer streak",s=>s.best>=5],["🧠","Quiz Whiz","Score 5/5 in a quiz",s=>s.perfect>=1],["🏰","Architect","Finish all missions",s=>Object.keys(s.done).length>=M.length],["⭐","Level 5","Reach level 5",s=>lv(s.xp)>=5],["💎","Honest Coder","Pass a mission without peeking at the solution",s=>Object.keys(s.done).some(k=>!s.peek[k])]];
+let S={xp:0,done:{},peek:{},best:0,perfect:0};
+try{const r=localStorage.getItem("joq");if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+const save=()=>{try{localStorage.setItem("joq",JSON.stringify(S))}catch(e){}};
+const lv=x=>Math.floor(x/150)+1;
+const $=s=>document.querySelector(s);const esc=t=>t.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+let tab="m",toastT;
+function toast(t){const e=$("#toast");e.textContent=t;e.style.display="block";clearTimeout(toastT);toastT=setTimeout(()=>e.style.display="none",2200)}
+function hud(){const l=lv(S.xp),p=(S.xp%150)/150*100;const titles=["Rookie","Coder","Builder","Architect","Master","Legend"];$("#lvl").textContent="Level "+l+" · "+titles[Math.min(l-1,5)];$("#xpbar").style.width=p+"%";$("#xptxt").textContent=S.xp+" XP · "+(150-S.xp%150)+" to next level"}
+function gain(n,m){const a=lv(S.xp);S.xp+=n;if(lv(S.xp)>a)toast("🎉 LEVEL UP! Level "+lv(S.xp));else if(m)toast(m);save();hud()}
+$("#nav").onclick=e=>{const t=e.target.dataset.t;if(!t)return;tab=t;[...$("#nav").children].forEach(b=>b.classList.toggle("on",b.dataset.t==t));render()};
+function render(){({m:missions,q:quizStart,b:badges})[tab]()}
+function missions(){$("#main").innerHTML='<p style="color:var(--mut)">Pick a mission, write the Java, and hit <b>Check</b>. Pass every checklist item to earn XP.</p><div class="grid">'+M.map((m,i)=>`<div class="card m" onclick="open_(${i})"><div class="tag">MISSION ${i+1} · ${m.tag} · ${m.xp} XP</div><h3 style="margin:6px 0">${m.t}</h3><div style="color:var(--mut);font-size:.9rem">${m.story}</div>${S.done[i]?'<div class="done">✔ Completed</div>':''}</div>`).join("")+"</div>"}
+function open_(i){const m=M[i];$("#main").innerHTML=`<button class="btn" onclick="missions()">← Back</button><div class="split" style="margin-top:10px"><div class="card"><div class="tag">MISSION ${i+1} · ${m.xp} XP</div><h2 style="margin:4px 0">${m.t}</h2><p>${m.story}</p><b>Your tasks</b><ol>${m.tasks.map(t=>"<li>"+esc(t)+"</li>").join("")}</ol><b>Checklist</b><ul class="chk" id="cl">${m.checks.map(c=>'<li class="n">○ '+c[0]+"</li>").join("")}</ul><div id="res"></div></div><div><textarea id="ed" spellcheck="false">${esc(m.start)}</textarea><div class="row"><button class="btn pri" onclick="check(${i})">✅ Check my code</button><button class="btn" onclick="sol(${i})">👀 Show solution (half XP)</button><button class="btn" onclick="$('#ed').value=M[${i}].start">↺ Reset</button></div><div id="sol"></div></div></div>`;
+$("#ed").onkeydown=e=>{if(e.key=="Tab"){e.preventDefault();const t=e.target,s=t.selectionStart;t.value=t.value.slice(0,s)+"    "+t.value.slice(t.selectionEnd);t.selectionStart=t.selectionEnd=s+4}}}
+function check(i){const m=M[i],code=$("#ed").value.replace(/\/\*[\s\S]*?\*\//g,"").replace(/\/\/.*$/gm,"");let ok=0;const r=m.checks.map(c=>{const p=c[1].test(code);if(p)ok++;return p});
+$("#cl").innerHTML=m.checks.map((c,k)=>`<li class="${r[k]?'y':'n'}">${r[k]?'✔':'○'} ${c[0]}</li>`).join("");
+if(ok==m.checks.length){let msg="🏆 Mission complete!";if(!S.done[i]){const x=S.peek[i]?Math.round(m.xp/2):m.xp;S.done[i]=1;gain(x,"+"+x+" XP!");msg+=" +"+x+" XP"+(S.peek[i]?" (half, you peeked)":"")}else msg+=" (already claimed, no extra XP)";save();$("#res").innerHTML='<div class="msg" style="border-color:var(--ok)">'+msg+"</div>"}
+else $("#res").innerHTML=`<div class="msg">${ok}/${m.checks.length} checks passed. Keep going, you're close!</div>`}
+function sol(i){S.peek[i]=1;save();$("#sol").innerHTML="<div class='msg'><b>Solution</b> (study it, then try retyping from memory):<pre>"+esc(M[i].sol)+"</pre></div>"}
+let qs,qi,qsc,qst;
+function quizStart(){const best=S.best;$("#main").innerHTML=`<div class="card" style="text-align:center"><h2>⚡ Quiz Arena</h2><p>5 random questions. <b>+10 XP</b> per correct answer, plus streak bonuses. No coding needed.</p><p>Best streak: <b>${best}</b> 🔥 · Pool: ${Q.length} questions</p><button class="btn pri" onclick="qgo()">Start round</button></div>`}
+function qgo(){qs=[...Q].sort(()=>Math.random()-.5).slice(0,5);qi=0;qsc=0;qst=0;qshow()}
+function qshow(){const q=qs[qi];$("#main").innerHTML=`<div class="card"><div class="tag">QUESTION ${qi+1}/5 · Streak ${qst} 🔥</div><h3>${esc(q[0])}</h3>${q[1].map((o,k)=>`<button class="btn opt" onclick="ans(${k})">${esc(o)}</button>`).join("")}<div id="fb"></div></div>`}
+function ans(k){const q=qs[qi],bs=document.querySelectorAll(".opt");bs.forEach((b,j)=>{b.disabled=true;if(j==q[2])b.classList.add("right")});let t;
+if(k==q[2]){qsc++;qst++;S.best=Math.max(S.best,qst);const x=10+(qst>=3?5:0);gain(x,"+"+x+" XP");t="✅ Correct! "}else{bs[k].classList.add("wrong");qst=0;t="❌ Not quite. "}
+const last=qi==4;$("#fb").innerHTML=`<div class="msg">${t}${esc(q[3])}</div><div class="row"><button class="btn pri" onclick="${last?'qend()':'qi++;qshow()'}">${last?'See results':'Next →'}</button></div>`;save()}
+function qend(){if(qsc==5){S.perfect++;gain(25,"Perfect round +25 XP!")}save();$("#main").innerHTML=`<div class="card" style="text-align:center"><h2>${qsc}/5 ${qsc==5?"🏆 Flawless!":qsc>=3?"👍 Nice!":"📚 Keep studying!"}</h2><div class="row" style="justify-content:center"><button class="btn pri" onclick="qgo()">Play again</button><button class="btn" onclick="quizStart()">Menu</button></div></div>`}
+function badges(){$("#main").innerHTML='<div class="grid">'+BADGES.map(b=>{const g=b[3](S);return`<div class="card badge ${g?'got':''}"><b>${b[0]}</b><div style="font-weight:700">${b[1]}</div><small>${b[2]}</small></div>`}).join("")+'</div><div class="row"><button class="btn" onclick="if(confirm(\'Reset all progress?\')){S={xp:0,done:{},peek:{},best:0,perfect:0};save();hud();render()}">Reset progress</button></div>'}
+hud();render();
+</script></body></html>
